@@ -23,17 +23,22 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
         }
 
-        if (Input.GetButtonDown("Jump") && rb.velocity.y > 0f)
+        if (Input.GetButtonDown("Jump") && rb.linearVelocity.y > 0f)
         {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.8f);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.8f);
         }
 
-        if (Input.GetButtonDown("Climb") && Physics2D.OverlapCircle(rb.position, 0.6f, wallLayer))
+        if (Input.GetButton("Climb") && Physics2D.OverlapBox(rb.position, new Vector2(1.2f, 0.5f), 0, wallLayer))
         {
-            rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+            Climb();
+        }
+        else
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rb.gravityScale = 1f;
         }
 
         Flip();
@@ -41,12 +46,30 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(horizontal * speed, rb.linearVelocity.y);
     }
 
     private bool IsGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        if (Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer))
+        {
+            return true;
+        }
+
+        else if (Physics2D.OverlapCircle(groundCheck.position, 0.2f, wallLayer))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void Climb()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+        rb.gravityScale = 0f;
+        rb.linearVelocity = new Vector2(0f, 0f);
+        rb.position = new Vector2(rb.position.x, rb.position.y + vertical * 0.03f);
     }
 
     private void Flip()
