@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private float vertical;
     private float speed = 6f;
     private float jumpPower = 24f;
+    private float climbSpeed = 3f;
     private bool isFacingRight = true;
 
     [SerializeField] private Rigidbody2D rb;
@@ -69,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezePositionX;
         rb.gravityScale = 0f;
         rb.linearVelocity = new Vector2(0f, 0f);
-        rb.position = new Vector2(rb.position.x, rb.position.y + vertical * 0.03f);
+        rb.position = new Vector2(rb.position.x, rb.position.y + vertical * climbSpeed * Time.deltaTime);
     }
 
     private void Flip()
