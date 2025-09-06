@@ -81,26 +81,42 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing == false)
         {
+            isDashing = true;
+
             if (horizontal != 0f)
             {
                 RaycastHit2D hit = Physics2D.Raycast(rb.position, new Vector2(horizontal, 0f), dashPower, wallLayer | groundLayer);
-                if (hit.collider != null) return;
-                rb.position = new Vector2(rb.position.x + horizontal * dashPower, rb.position.y);
-                isDashing = true;
+                if (hit.collider != null)
+                {
+                    if (Physics2D.OverlapCircle(new Vector2(hit.point.x + (horizontal * dashPower), hit.point.y), 0.1f, wallLayer | groundLayer)) rb.position = new Vector2(hit.point.x - (horizontal * 0.5f), rb.position.y);
+                    else rb.position = new Vector2(hit.point.x + (horizontal * dashPower), rb.position.y);
+                }
+
+                else rb.position = new Vector2(rb.position.x + horizontal * dashPower, rb.position.y);
             }
+
             else if (isFacingRight)
             {
                 RaycastHit2D hit = Physics2D.Raycast(rb.position, new Vector2(1f, 0f), dashPower, wallLayer | groundLayer);
-                if (hit.collider != null) return;
-                rb.position = new Vector2(rb.position.x + dashPower, rb.position.y);
-                isDashing = true;
+                if (hit.collider != null)
+                {
+                    if (Physics2D.OverlapCircle(new Vector2(hit.point.x + dashPower, hit.point.y), 0.1f, wallLayer | groundLayer)) rb.position = new Vector2(hit.point.x - 0.5f, rb.position.y);
+                    else rb.position = new Vector2(hit.point.x + dashPower, rb.position.y);
+                }
+
+                else rb.position = new Vector2(rb.position.x + dashPower, rb.position.y);
             }
+
             else
             {
                 RaycastHit2D hit = Physics2D.Raycast(rb.position, new Vector2(-1f, 0f), dashPower, wallLayer | groundLayer);
-                if (hit.collider != null) return;
-                rb.position = new Vector2(rb.position.x - dashPower, rb.position.y);
-                isDashing = true;
+                if (hit.collider != null)
+                {
+                    if (Physics2D.OverlapCircle(new Vector2(hit.point.x - dashPower, hit.point.y), 0.1f, wallLayer | groundLayer)) rb.position = new Vector2(hit.point.x + 0.5f, rb.position.y);
+                    else rb.position = new Vector2(hit.point.x - dashPower, rb.position.y);
+                }
+
+                else rb.position = new Vector2(rb.position.x - dashPower, rb.position.y);
             }
         }
     }
