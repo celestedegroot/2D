@@ -9,7 +9,9 @@ public class PlayerMovement : MonoBehaviour
     private float speed = 6f;
     private float jumpPower = 24f;
     private float climbSpeed = 3f;
+    private float dashPower = 4f;
     private bool isFacingRight = true;
+    private bool isDashing = false;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -22,6 +24,11 @@ public class PlayerMovement : MonoBehaviour
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
+        if (IsGrounded())
+        {
+            isDashing = false;
+        }
+
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
@@ -30,6 +37,11 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && rb.linearVelocity.y > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.8f);
+        }
+
+        if (Input.GetButtonDown("Dash"))
+        {
+            Dash();
         }
 
         if (Input.GetButton("Climb") && Physics2D.OverlapBox(rb.position, new Vector2(1.2f, 0.5f), 0, wallLayer))
@@ -63,6 +75,34 @@ public class PlayerMovement : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void Dash()
+    {
+        if (isDashing == false)
+        {
+            if (horizontal != 0f)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(rb.position, new Vector2(horizontal, 0f), dashPower, wallLayer | groundLayer);
+                if (hit.collider != null) return;
+                rb.position = new Vector2(rb.position.x + horizontal * dashPower, rb.position.y);
+                isDashing = true;
+            }
+            else if (isFacingRight)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(rb.position, new Vector2(1f, 0f), dashPower, wallLayer | groundLayer);
+                if (hit.collider != null) return;
+                rb.position = new Vector2(rb.position.x + dashPower, rb.position.y);
+                isDashing = true;
+            }
+            else
+            {
+                RaycastHit2D hit = Physics2D.Raycast(rb.position, new Vector2(-1f, 0f), dashPower, wallLayer | groundLayer);
+                if (hit.collider != null) return;
+                rb.position = new Vector2(rb.position.x - dashPower, rb.position.y);
+                isDashing = true;
+            }
+        }
     }
 
     private void Climb()
