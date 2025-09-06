@@ -10,7 +10,12 @@ public class CheckpointManager : MonoBehaviour
     {
         if (Input.GetButtonDown("Restart"))
         {
-            player.position = currentCheckpoint.position;
+            Respawn();
         }
+    }
+
+    public void Respawn()
+    {
+        player.position = currentCheckpoint.position;
     }
 }

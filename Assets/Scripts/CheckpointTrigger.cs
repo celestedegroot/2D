@@ -7,10 +7,8 @@ public class CheckpointTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collision detected with: " + collision.name);
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Checkpoint reached!");
             checkpointManager.currentCheckpoint = checkpointTransform;
         }
     }
