@@ -92,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
                     else rb.position = new Vector2(hit.point.x + (horizontal * dashPower), rb.position.y);
                 }
 
-                else rb.position = new Vector2(rb.position.x + horizontal * dashPower, rb.position.y);
+                else rb.position = new Vector2(rb.position.x + (horizontal * dashPower), rb.position.y);
             }
 
             else if (isFacingRight)
