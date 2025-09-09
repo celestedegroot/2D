@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
-    [SerializeField] private GameObject cutscene = null;
+    [SerializeField] private GameObject cutscene;
 
     // Update is called once per frame
     void Update()
@@ -26,16 +26,16 @@ public class PlayerMovement : MonoBehaviour
         vertical = Input.GetAxisRaw("Vertical");
 
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-        if (IsGrounded())
+        
+        if (IsGrounded() && !cutscene.activeInHierarchy)
         {
             isDashing = false;
         }
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
-        }
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+            }
 
         if (Input.GetButtonDown("Jump") && rb.linearVelocity.y > 0f)
         {
@@ -57,7 +57,11 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = 1f;
         }
 
-        if (cutscene != null && cutscene.activeInHierarchy) rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        if (cutscene != null && cutscene.activeInHierarchy)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            isDashing = true;
+        }
 
         Flip();
     }
