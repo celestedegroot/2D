@@ -17,12 +17,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private GameObject cutscene = null;
 
     // Update is called once per frame
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
+
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         if (IsGrounded())
         {
@@ -53,6 +56,8 @@ public class PlayerMovement : MonoBehaviour
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             rb.gravityScale = 1f;
         }
+
+        if (cutscene != null && cutscene.activeInHierarchy) rb.constraints = RigidbodyConstraints2D.FreezeAll;
 
         Flip();
     }
