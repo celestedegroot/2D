@@ -8,7 +8,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField] private GameObject pointB;
     private Rigidbody2D rb;
     private Transform currentPoint;
-    private float speed = 3f;
+    public float speed = 3f;
 
     private void Start()
     {
